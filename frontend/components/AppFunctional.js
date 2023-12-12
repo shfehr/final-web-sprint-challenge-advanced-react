@@ -11,9 +11,11 @@ const URL = 'http://localhost:9000/api/result'
 //const [startingIndex, setStartingIndex] = useState()
 
 export default function AppFunctional(props) {
+  const [steps, setSteps] = useState(initialSteps)
   const [nextIndex, setNextIndex] = useState(initialIndex)
   const [index, setIndex] = useState(initialIndex)
   const [email, setEmail] = useState(initialEmail)
+  // const [message, setMessage] = useState(initialMessage)
 
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
@@ -45,7 +47,12 @@ export default function AppFunctional(props) {
   }
 
   function reset() {
-    // Use this helper to reset all states to their initial values.
+    setEmail(initialEmail)
+    setIndex(initialIndex)
+    setSteps(initialSteps)
+    
+    // setMessage(initialMessage)
+    //Use this helper to reset all states to their initial values.
   }
 
   function getNextIndex(direction) {
@@ -55,6 +62,7 @@ export default function AppFunctional(props) {
        break
        }   else {
        setIndex(index - 3)
+       setSteps(steps + 1)
        return nextIndex
        }  
        
@@ -63,6 +71,7 @@ export default function AppFunctional(props) {
         break
        }   else {
         setIndex(index + 3)
+        setSteps(steps + 1)
         return nextIndex
        } 
 
@@ -71,6 +80,7 @@ export default function AppFunctional(props) {
         break
        }   else {
         setIndex(index + 1)
+        setSteps(steps + 1)
        } return nextIndex
        
       case 'left':
@@ -78,6 +88,7 @@ export default function AppFunctional(props) {
         break
        }   else {
         setIndex(index - 1)
+        setSteps(steps + 1)
        } 
        
        return nextIndex
@@ -105,10 +116,10 @@ export default function AppFunctional(props) {
     // and change any states accordingly.
   }
   console.log(index)
+  console.log(steps)
 
   function onChange(evt) {
-    // let { email } = evt.target
-    // setEmail({...email, [evt.target.name]: evt.target.value})
+    setEmail(evt.target.value)
     //
     // You will need this to update the value of the input.
   }
@@ -128,7 +139,7 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates (2, 2)</h3>
-        <h3 id="steps">You moved 0 times</h3>
+        <h3 id="steps">You moved {steps} times</h3>
       </div>
       <div id="grid">
         {
@@ -164,7 +175,10 @@ export default function AppFunctional(props) {
           onClick={() => moveBox('down')}
           >DOWN
           </button>
-        <button id="reset">reset</button>
+        <button 
+        id="reset"
+        onClick={() => reset()}
+        >reset</button>
       </div>
       <form>
         <input id="email" 
