@@ -11,8 +11,10 @@ const URL = 'http://localhost:9000/api/result'
 //const [startingIndex, setStartingIndex] = useState()
 
 export default function AppFunctional(props) {
-  const [nextIndex, setNextIndex] = useState()
+  const [nextIndex, setNextIndex] = useState(initialIndex)
   const [index, setIndex] = useState(initialIndex)
+  const [email, setEmail] = useState(initialEmail)
+
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
   // console.log(initialIndex)
@@ -47,21 +49,41 @@ export default function AppFunctional(props) {
   }
 
   function getNextIndex(direction) {
-    getXY()
-    // const nextIndex = switch () {
-    //   case 'up':
-    //    nextIndex = index - 3
-    //    if (nextIndex >= 0) {
-    //    index = nextIndex
-    //    return index
-    //    } else 
-    //    
-    //   case 'down':
-    //    nextIndex = index + 3
-  //      if (nextIndex > 8)
-//
-//
-//}
+    switch (direction) {
+      case 'up':
+       if (index < 3) {
+       break
+       }   else {
+       setIndex(index - 3)
+       return nextIndex
+       }  
+       
+      case 'down':
+       if (index > 5) {
+        break
+       }   else {
+        setIndex(index + 3)
+        return nextIndex
+       } 
+
+      case 'right':
+       if (index === 2 || index === 5 || index === 8) {
+        break
+       }   else {
+        setIndex(index + 1)
+       } return nextIndex
+       
+      case 'left':
+       if (index === 0 || index === 3 || index === 6) {
+        break
+       }   else {
+        setIndex(index - 1)
+       } 
+       
+       return nextIndex
+}
+
+
     //function 
     // switch method - case for up down left & right
     // 4 -- up -- 1
@@ -73,12 +95,21 @@ export default function AppFunctional(props) {
   }
 
   function moveBox(evt) {
+    console.log(evt)
+    const boxDirection = evt 
+    const random = getNextIndex(boxDirection)
+    getNextIndex(boxDirection)
+    
     // next step
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
   }
+  console.log(index)
 
   function onChange(evt) {
+    // let { email } = evt.target
+    // setEmail({...email, [evt.target.name]: evt.target.value})
+    //
     // You will need this to update the value of the input.
   }
 
@@ -108,26 +139,30 @@ export default function AppFunctional(props) {
           ))
         }
       </div>
-      onClick={() => moveBox('left')}
+      
       <div className="info">
         <h3 id="message"></h3>
       </div>
       <div id="keypad">
         <button 
-          id="left">LEFT
-          {/* onClick{() => moveBox('left')} */}
+          id="left"
+          // onClick={() => getNextIndex('left')}
+          onClick={() => moveBox('left')}
+          >LEFT
           </button>
         <button 
-          id="up">UP
-          {/* onClick{() => moveBox('up')} */}
+          id="up"
+          onClick={() => moveBox('up')}>UP
           </button>
         <button 
-          id="right">RIGHT
-          {/* onClick{() => moveBox('right')} */}
+          id="right"
+          onClick={() => moveBox('right')}
+          >RIGHT
           </button>
         <button 
-          id="down">DOWN
-          {/* onClick{() => moveBox('left')} */}
+          id="down"
+          onClick={() => moveBox('down')}
+          >DOWN
           </button>
         <button id="reset">reset</button>
       </div>
