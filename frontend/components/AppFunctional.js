@@ -15,7 +15,7 @@ export default function AppFunctional(props) {
   const [nextIndex, setNextIndex] = useState(initialIndex)
   const [index, setIndex] = useState(initialIndex)
   const [email, setEmail] = useState(initialEmail)
-  // const [message, setMessage] = useState(initialMessage)
+  const [message, setMessage] = useState(initialMessage)
 
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
@@ -30,7 +30,7 @@ export default function AppFunctional(props) {
     } else if (index <= 8) {
     y = 3
     }
-    return [x,y]
+    return ([x , y])
   }
     //console.log(getXY()) - currently working
 
@@ -40,16 +40,24 @@ export default function AppFunctional(props) {
 
 
   function getXYMessage() {
+    
+       const [x, y] = getXY()
+       return (`Coordinates (${x}, ${y})`)
+       
+       
+    
+}
     //invoke function
     // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
     // You can use the `getXY` helper above to obtain the coordinates, and then `getXYMessage`
     // returns the fully constructed string.
-  }
+  
 
   function reset() {
     setEmail(initialEmail)
     setIndex(initialIndex)
     setSteps(initialSteps)
+    setMessage(initialMessage)
     
     // setMessage(initialMessage)
     //Use this helper to reset all states to their initial values.
@@ -59,6 +67,7 @@ export default function AppFunctional(props) {
     switch (direction) {
       case 'up':
        if (index < 3) {
+       setMessage(`You can't move up`)
        break
        }   else {
        setIndex(index - 3)
@@ -68,6 +77,7 @@ export default function AppFunctional(props) {
        
       case 'down':
        if (index > 5) {
+        setMessage(`You can't move down`)
         break
        }   else {
         setIndex(index + 3)
@@ -77,6 +87,7 @@ export default function AppFunctional(props) {
 
       case 'right':
        if (index === 2 || index === 5 || index === 8) {
+        setMessage(`You can't move right`)
         break
        }   else {
         setIndex(index + 1)
@@ -85,6 +96,7 @@ export default function AppFunctional(props) {
        
       case 'left':
        if (index === 0 || index === 3 || index === 6) {
+        setMessage(`You can't move left`)
         break
        }   else {
         setIndex(index - 1)
@@ -106,17 +118,16 @@ export default function AppFunctional(props) {
   }
 
   function moveBox(evt) {
-    console.log(evt)
+    // console.log(evt)
     const boxDirection = evt 
-    const random = getNextIndex(boxDirection)
     getNextIndex(boxDirection)
     
     // next step
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
   }
-  console.log(index)
-  console.log(steps)
+  // console.log(index)
+  // console.log(steps)
 
   function onChange(evt) {
     setEmail(evt.target.value)
@@ -125,12 +136,19 @@ export default function AppFunctional(props) {
   }
 
   function onSubmit(evt) {
-    // evt.preventDefault();
-    
-
-    // axios.post(URL,{})
-    //   .then(res => {console.log(res)})
-    //   .catch(err => {console.log(err)})
+    evt.preventDefault();
+    const [x,y] = getXY()
+    console.log(x)
+    console.log(y)
+    axios.post(URL,{email, steps, x: x, y: y})
+      .then(res => {
+        setEmail('')
+        setMessage(res.data.message)
+        // console.log(res.data.message)
+      })
+      .catch(err => {
+        setMessage(err.data.message)})
+      
     // Use a POST request to send a payload to the server.
     
   }
@@ -138,21 +156,21 @@ export default function AppFunctional(props) {
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates (2, 2)</h3>
+        <h3 id="coordinates">{getXYMessage()}</h3>
         <h3 id="steps">You moved {steps} times</h3>
       </div>
       <div id="grid">
         {
           [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === 4 ? ' active' : ''}`}>
-              {idx === 4 ? 'B' : null}
+            <div key={idx} className={`square${idx === index ? ' active' : ''}`}>
+              {idx === index ? 'B' : null}
             </div>
           ))
         }
       </div>
       
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message"> {message}</h3>
       </div>
       <div id="keypad">
         <button 
@@ -180,7 +198,7 @@ export default function AppFunctional(props) {
         onClick={() => reset()}
         >reset</button>
       </div>
-      <form>
+      <form onSubmit={onSubmit}>
         <input id="email" 
                type="email" 
                placeholder="type email"

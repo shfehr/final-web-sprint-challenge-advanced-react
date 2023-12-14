@@ -1,10 +1,12 @@
 import React from 'react'
+import axios from 'axios'
 
 // Suggested initial states
 const initialMessage = ''
 const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
+const URL = 'http://localhost:9000/api/result'
 
 const initialState = {
   message: initialMessage,
@@ -44,6 +46,8 @@ export default class AppClass extends React.Component {
   }
 
   onChange = (evt) => {
+    const { value } = evt.target
+    this.setState({...this.state, email: value})
     // You will need this to update the value of the input.
   }
 
