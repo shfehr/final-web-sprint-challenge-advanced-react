@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import axios from 'axios'
 
 // Suggested initial states
-const initialMessage = ''
+const initialMessage = ""
 const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
@@ -42,9 +42,7 @@ export default function AppFunctional(props) {
   function getXYMessage() {
     
        const [x, y] = getXY()
-       return (`Coordinates (${x}, ${y})`)
-       
-       
+       return (` (${x}, ${y})`) 
     
 }
     //invoke function
@@ -67,17 +65,18 @@ export default function AppFunctional(props) {
     switch (direction) {
       case 'up':
        if (index < 3) {
-       setMessage(`You can't move up`)
+       setMessage("You can't go up")
        break
        }   else {
        setIndex(index - 3)
        setSteps(steps + 1)
+       setMessage("")
        return nextIndex
        }  
        
       case 'down':
        if (index > 5) {
-        setMessage(`You can't move down`)
+        setMessage("You can't go down")
         break
        }   else {
         setIndex(index + 3)
@@ -87,7 +86,7 @@ export default function AppFunctional(props) {
 
       case 'right':
        if (index === 2 || index === 5 || index === 8) {
-        setMessage(`You can't move right`)
+        setMessage("You can't go right")
         break
        }   else {
         setIndex(index + 1)
@@ -96,7 +95,7 @@ export default function AppFunctional(props) {
        
       case 'left':
        if (index === 0 || index === 3 || index === 6) {
-        setMessage(`You can't move left`)
+        setMessage("You can't go left")
         break
        }   else {
         setIndex(index - 1)
@@ -138,16 +137,17 @@ export default function AppFunctional(props) {
   function onSubmit(evt) {
     evt.preventDefault();
     const [x,y] = getXY()
-    console.log(x)
-    console.log(y)
+    // console.log(x)
+    // console.log(y)
     axios.post(URL,{email, steps, x: x, y: y})
       .then(res => {
+        setMessage(res.data.message),
         setEmail('')
-        setMessage(res.data.message)
         // console.log(res.data.message)
       })
       .catch(err => {
-        setMessage(err.data.message)})
+        console.log(err),
+        setMessage(err.response.data.message)})
       
     // Use a POST request to send a payload to the server.
     
@@ -156,8 +156,8 @@ export default function AppFunctional(props) {
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">{getXYMessage()}</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="coordinates">Coordinates{getXYMessage()}</h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? `time` : 'times'}</h3>
       </div>
       <div id="grid">
         {
@@ -170,7 +170,7 @@ export default function AppFunctional(props) {
       </div>
       
       <div className="info">
-        <h3 id="message"> {message}</h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
         <button 
@@ -202,6 +202,7 @@ export default function AppFunctional(props) {
         <input id="email" 
                type="email" 
                placeholder="type email"
+               value={email}
                onChange = {onChange}></input>
         <input id="submit" type="submit"></input>
       </form>
